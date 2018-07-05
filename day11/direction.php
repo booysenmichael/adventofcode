@@ -3,18 +3,22 @@
 //STEPS: 650
 //MAX_DISTANCE: 1465
 
-
-//STARTING POINT 0;
-//6 DIRECTIONS N, NE, NW, S, SE, SW
-//HOWEVER, WE CAN USE 3 directions, x,y,z because N,S = 0 steps, SW,NE = 0 step
-//Hexagonal Grids (flat top): https://www.redblobgames.com/grids/hexagons/
+//WHAT DO WE KNOW:
 /*
+STARTING POINT 0;
+6 DIRECTIONS N, NE, NW, S, SE, SW
+HOWEVER, WE CAN USE 3 directions, x,y,z because N,S = 0 steps, SW,NE = 0 step
+Hexagonal Grids (flat top): https://www.redblobgames.com/grids/hexagons/
+
 N:	X=0;Y=1;Z=-1
 S:	X=0;Y=-1;Z=+1
 NE:	X=+1;Y=0;Z=-1
 NW:	X=-1;Y=+1;Z=0
 SE: X=+1;Y=-1;Z=0
 SW:	X=-1;Y=0;Z=+1
+
+MAX POINT IS NUMBER OF STEPS.
+NEED TO USE ABSOLUTE VALUES
 */
 
 $file = 'directions.txt'; //ADDED KNOWN STEPS TO A FILE
@@ -57,7 +61,7 @@ foreach ($directionsArray as $key => $value) {
 		$y += 0;
 		$z += 1;
 	}
-	$max_distance = max($max_distance,abs($x),abs($y),abs($z));
+	$max_distance = max($max_distance,abs($x),abs($y),abs($z)); //GET THE MAX VALUE BETWEEN $x, $y, $x and the current max_value to determine the max distance.
 }
 
 echo "steps:".max(abs($x),abs($y),abs($z));
