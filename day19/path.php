@@ -1,26 +1,14 @@
 <?php
 //ANSWER PART 1: YOHREPXWN
 //ANSWER PART 2: 16734
-function outputChar($char){
-	switch($char){
-		case "|":
-			return "up/down";
-		break;
-		case "+":
-			return "change";
-		break;
-		case "-":
-			return "left/right";
-		break;
-	}
-}
+
 
 $file="path.txt";
 
 $lineCount = 0;
 $pathArray=array();
 $f=fopen($file,'r');
-	while(!feof($f)){
+	while(!feof($f)){ //LOOP THROUGH FILE TO CREATE ARRAY, EASIER TO "MOVE" IN AN ARRAY THAT IN A FILE
 		$line = fgets($f);
 		for($i=0;$i<strlen($line);$i++){
 			$tempText=substr($line, $i,1);
@@ -31,12 +19,12 @@ $f=fopen($file,'r');
 	}
 
 $prevChar = '';
-$prevPostion = '';
+$position = 0;
 
 //WE KNOW IT START ON TOP OF SCREEN, LINE 0 / key 0. NOW WE NEED TO GET THE POSTION
 foreach ($pathArray['0'] as $key => $value) {
 	if($value=='|'){
-		$prevPostion=$key;
+		$position=$key;
 		$prevChar = $value;
 		break 1;
 	}
@@ -47,24 +35,22 @@ $direction = 'd'; //d,u,l,r
 $prevLineNumber=0;
 $lineNumber=1;
 $charArray = array();
+
+//THE POSTION AND THE NEXT LINE KEY 0, TO GET THE NEXT CHAR
 while(!$end){
-	echo $direction;
-	$currentChar = $pathArray[$lineNumber][$prevPostion];
+	
+	$currentChar = $pathArray[$lineNumber][$position];
 	if(ctype_alpha($currentChar)){
-		echo $currentChar.$currentChar;
 		array_push($charArray, $currentChar);
 	}
-	if(($currentChar==$prevChar)||(ctype_alpha($currentChar))){
-		
-		//echo $currentChar;
-		//echo outputChar($currentChar)."<br>";
+	if(($currentChar==$prevChar)||(ctype_alpha($currentChar))){ // IF CHAR IS THE SAME CONTINUE ON THE PATH d/u = line number changes, l/r = the position changes 
 		switch($direction){
 			case "l":
-				$prevPostion = $prevPostion-1;
+				$position = $position-1;
 				++$x;
 			break;
 			case "r":
-				$prevPostion = $prevPostion+1;
+				$position = $position+1;
 				++$x;
 			break;
 			case "d":
@@ -76,30 +62,26 @@ while(!$end){
 				++$x;
 			break;
 		}
-	}else{
+	}else{ // IF NOT THE SAME, only + will cause the path to change
 		if($currentChar=="+"){
 			if(($direction=='l')||($direction=='r')){
-				if($pathArray[$lineNumber-1][$prevPostion]=='|'){
-					echo 'g Up';
+				if($pathArray[$lineNumber-1][$position]=='|'){
 					$direction='u';
 					$lineNumber=$lineNumber-1;
 					++$x;
-				}elseif($pathArray[$lineNumber+1][$prevPostion]=='|'){
-					echo 'g Dwn';
+				}elseif($pathArray[$lineNumber+1][$position]=='|'){
 					$direction='d';
 					$lineNumber=$lineNumber+1;
 					++$x;
 				}	
 			}elseif(($direction=='u')||($direction=='d')){
-				if($pathArray[$lineNumber][$prevPostion+1]=='-'){
-					echo 'g Right';
+				if($pathArray[$lineNumber][$position+1]=='-'){
 					$direction='r';
-					$prevPostion=$prevPostion+1;
+					$position=$position+1;
 					++$x;
-				}elseif($pathArray[$lineNumber][$prevPostion-1]=='-'){
-					echo 'g Left';
+				}elseif($pathArray[$lineNumber][$position-1]=='-'){
 					$direction='l';
-					$prevPostion=$prevPostion-1;
+					$position=$position-1;
 					++$x;
 				}	
 			}	
@@ -107,22 +89,20 @@ while(!$end){
 	}
 	
 	
-	$prevChar=$currentChar;
-	echo $lineNumber." ".$prevPostion."(".$pathArray[$lineNumber][$prevPostion].")";
-	if($pathArray[$lineNumber][$prevPostion]==' '){
-
+	$prevChar=$currentChar; //Assign current character to previous character.
+	if($currentChar==' '){ //If the current character is blank, change end to true
 		$end=true;
 	}
 
-	echo "<br>";
+
 }
 
-
+echo "The Letters you will see: ";
 foreach($charArray as $key => $value){
 	echo $value;
 }
 echo "<br>";
-echo $x;
+echo "The total number of steps: ".$x;
 
 
 
